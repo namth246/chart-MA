@@ -9,12 +9,6 @@
   <script type="module" src="src/app.js" defer></script>
   <script>
     (function () {
-      var input = document.getElementById("sheetUrlInput");
-      if (!input || input.value) return;
-      var id = input.getAttribute("data-default-sheet-id");
-      if (id) {
-        input.value = "https://docs.google.com/spreadsheets/d/" + id + "/edit";
-      }
       if (location.protocol === "file:") {
         var banner = document.getElementById("fileProtocolBanner");
         if (banner) banner.hidden = false;
@@ -31,7 +25,7 @@
       <code>http://localhost:3000</code>.
     </div>
     <header class="header">
-      <div>
+      <div class="header-main">
         <h1>
           CNF LIVE DATA CHART ENGINE
           <span class="live"><span class="dot" aria-hidden="true"></span>LIVE</span>
@@ -39,31 +33,77 @@
         <p class="subtitle">Dữ liệu tự động từ Google Sheets · Cập nhật mỗi 10 giây</p>
         <p class="meta" id="lastUpdated">Đang khởi tạo...</p>
       </div>
-      <div class="header-actions">
+      <div class="header-brand">
+        <img
+          src="assets/logo.jpg"
+          alt="CNF Fundamental Growth"
+          class="cnf-logo cnf-logo--badge"
+          width="108"
+          height="108"
+        />
         <button type="button" id="refreshBtn">Làm mới</button>
       </div>
     </header>
 
     <section class="panel sheet-source" aria-label="Nguồn Google Sheet">
       <h2>Nguồn Google Sheet</h2>
-      <p class="hint">
-        Dán link Google Sheet công khai (tab <b>Dem MA</b>). Mặc định là sheet đã cấu hình sẵn.
-      </p>
-      <div class="toolbar sheet-url-row">
-        <input
-          type="text"
-          id="sheetUrlInput"
-          data-default-sheet-id="18R5rYR6vZSkVND_7XH7WLdkUvdDiN34bLuAdb9SzaC0"
-          placeholder="https://docs.google.com/spreadsheets/d/..."
-          aria-label="Link Google Sheet"
-          spellcheck="false"
-        />
-        <button type="button" id="applySheetBtn">Áp dụng</button>
+
+      <div id="sheetSourceLocked">
+        <p class="hint">Link nguồn được bảo vệ. Nhập mã PIN 4 chữ số để xem hoặc thay đổi.</p>
+        <div class="toolbar">
+          <button type="button" id="unlockSheetBtn">Mở khóa nguồn</button>
+        </div>
       </div>
-      <div id="sheetSourceStatus"></div>
+
+      <div id="sheetSourceUnlocked" hidden>
+        <p class="hint">
+          Dán link Google Sheet công khai (tab <b>Dem MA</b>). Mặc định là sheet đã cấu hình sẵn.
+        </p>
+        <div class="toolbar sheet-url-row">
+          <input
+            type="text"
+            id="sheetUrlInput"
+            placeholder="https://docs.google.com/spreadsheets/d/..."
+            aria-label="Link Google Sheet"
+            spellcheck="false"
+            autocomplete="off"
+          />
+          <button type="button" id="applySheetBtn">Áp dụng</button>
+          <button type="button" id="lockSheetBtn">Khóa lại</button>
+        </div>
+        <div id="sheetSourceStatus"></div>
+      </div>
+
+      <dialog id="sheetPinDialog" class="pin-dialog" aria-labelledby="sheetPinTitle">
+        <form method="dialog" id="sheetPinForm">
+          <h3 id="sheetPinTitle">Nhập mã PIN</h3>
+          <p class="hint">Mã gồm 4 chữ số để truy cập nguồn Google Sheet.</p>
+          <input
+            type="password"
+            id="sheetPinInput"
+            inputmode="numeric"
+            pattern="\d{4}"
+            maxlength="4"
+            placeholder="••••"
+            aria-label="Mã PIN 4 chữ số"
+            autocomplete="off"
+          />
+          <p id="sheetPinError" class="pin-error" hidden></p>
+          <div class="toolbar pin-actions">
+            <button type="submit" id="sheetPinSubmit">Xác nhận</button>
+            <button type="button" id="sheetPinCancel">Hủy</button>
+          </div>
+        </form>
+      </dialog>
     </section>
 
     <section class="chart-card" aria-label="Biểu đồ breadth">
+      <img
+        src="assets/logo.jpg"
+        alt=""
+        aria-hidden="true"
+        class="cnf-logo cnf-logo--watermark"
+      />
       <div id="chart"></div>
     </section>
 

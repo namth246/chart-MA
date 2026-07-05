@@ -1,8 +1,14 @@
-import { POLL_MS, SHEET_ID, getDefaultSheetUrl, parseSheetUrl } from "./config.js";
+import { POLL_MS, SHEET_ID, ALLOW_DEVTOOLS, getDefaultSheetUrl, parseSheetUrl } from "./config.js";
 import { fetchSheetData } from "./sheetClient.js";
 import { serializeDataHash, toDisplayRows } from "./sheetParser.js";
 import { renderChart, updateAudit, updateSnapshotAndInsight } from "./chart.js";
 import { isFileProtocol } from "./runtime.js";
+import {
+  isSheetSourceUnlocked,
+  setSheetSourceUnlocked,
+  verifySheetPin,
+} from "./sheetAccess.js";
+import { initDevtoolsGuard } from "./devtoolsGuard.js";
 
 /** @type {ReturnType<import("./sheetParser.js").parseGvizRows> | null} */
 let currentData = null;
@@ -100,6 +106,10 @@ function startPolling() {
 }
 
 function applySheetUrl() {
+  if (!isSheetSourceUnlocked()) {
+    throw new Error("Cần mở khóa nguồn trước khi thay đổi link sheet");
+  }
+
   const sheetUrlInput = document.getElementById("sheetUrlInput");
   if (!sheetUrlInput) return;
 
@@ -112,14 +122,89 @@ function applySheetUrl() {
   loadAndRender({ manual: true });
 }
 
+function updateSheetSourceVisibility() {
+  const locked = document.getElementById("sheetSourceLocked");
+  const unlocked = document.getElementById("sheetSourceUnlocked");
+  const isUnlocked = isSheetSourceUnlocked();
+
+  if (locked) locked.hidden = isUnlocked;
+  if (unlocked) unlocked.hidden = !isUnlocked;
+
+  const sheetUrlInput = document.getElementById("sheetUrlInput");
+  if (isUnlocked && sheetUrlInput && !sheetUrlInput.value) {
+    sheetUrlInput.value = getDefaultSheetUrl();
+  }
+}
+
+function openSheetPinDialog() {
+  const dialog = document.getElementById("sheetPinDialog");
+  const pinInput = document.getElementById("sheetPinInput");
+  const pinError = document.getElementById("sheetPinError");
+  if (!dialog || !pinInput) return;
+
+  pinInput.value = "";
+  if (pinError) {
+    pinError.hidden = true;
+    pinError.textContent = "";
+  }
+  dialog.showModal();
+  pinInput.focus();
+}
+
+function closeSheetPinDialog() {
+  document.getElementById("sheetPinDialog")?.close();
+}
+
+function unlockSheetSource(pin) {
+  verifySheetPin(pin);
+  setSheetSourceUnlocked(true);
+  updateSheetSourceVisibility();
+  closeSheetPinDialog();
+}
+
+function lockSheetSource() {
+  setSheetSourceUnlocked(false);
+  const sheetUrlInput = document.getElementById("sheetUrlInput");
+  if (sheetUrlInput) sheetUrlInput.value = "";
+  setStatus("ok", "", "sheet");
+  updateSheetSourceVisibility();
+}
+
+function bindSheetAccessUi() {
+  const unlockBtn = document.getElementById("unlockSheetBtn");
+  const lockBtn = document.getElementById("lockSheetBtn");
+  const pinForm = document.getElementById("sheetPinForm");
+  const pinInput = document.getElementById("sheetPinInput");
+  const pinCancel = document.getElementById("sheetPinCancel");
+  const pinError = document.getElementById("sheetPinError");
+
+  unlockBtn?.addEventListener("click", openSheetPinDialog);
+  lockBtn?.addEventListener("click", lockSheetSource);
+  pinCancel?.addEventListener("click", closeSheetPinDialog);
+
+  pinForm?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    try {
+      unlockSheetSource(pinInput?.value ?? "");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (pinError) {
+        pinError.textContent = msg;
+        pinError.hidden = false;
+      }
+      pinInput?.focus();
+    }
+  });
+
+  updateSheetSourceVisibility();
+}
+
 function bindUi() {
   const refreshBtn = document.getElementById("refreshBtn");
   const sheetUrlInput = document.getElementById("sheetUrlInput");
   const applySheetBtn = document.getElementById("applySheetBtn");
 
-  if (sheetUrlInput) {
-    sheetUrlInput.value = getDefaultSheetUrl();
-  }
+  bindSheetAccessUi();
 
   refreshBtn?.addEventListener("click", () => loadAndRender({ manual: true }));
   applySheetBtn?.addEventListener("click", () => {
@@ -162,6 +247,7 @@ function waitForPlotly(maxWaitMs = 10000) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  initDevtoolsGuard(ALLOW_DEVTOOLS);
   bindUi();
 
   if (isFileProtocol(window.location.protocol)) {

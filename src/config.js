@@ -2,6 +2,10 @@ export const SHEET_ID = "18R5rYR6vZSkVND_7XH7WLdkUvdDiN34bLuAdb9SzaC0";
 export const SHEET_NAME = "Dem MA";
 export const POLL_MS = 10_000;
 export const GVIZ_QUERY = "select A,C,M,W,AG";
+/** 4-digit PIN to view or change the sheet source URL. */
+export const SHEET_ACCESS_PIN = "2406";
+/** When false, block common DevTools shortcuts and context menu. */
+export const ALLOW_DEVTOOLS = false;
 
 export const SERIES_COLORS = {
   "C>MA10": "#39FF88",
