@@ -7,22 +7,61 @@
   <link rel="stylesheet" href="styles/main.css" />
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>
   <script type="module" src="src/app.js" defer></script>
+  <script>
+    (function () {
+      var input = document.getElementById("sheetUrlInput");
+      if (!input || input.value) return;
+      var id = input.getAttribute("data-default-sheet-id");
+      if (id) {
+        input.value = "https://docs.google.com/spreadsheets/d/" + id + "/edit";
+      }
+      if (location.protocol === "file:") {
+        var banner = document.getElementById("fileProtocolBanner");
+        if (banner) banner.hidden = false;
+      }
+    })();
+  </script>
 </head>
 <body>
   <div class="page">
+    <div id="fileProtocolBanner" class="protocol-banner error" hidden>
+      <b>Không thể chạy khi mở file trực tiếp.</b>
+      Trình duyệt chặn module JavaScript và tải Google Sheets từ <code>file://</code>.
+      Mở terminal trong thư mục dự án và chạy <code>npm start</code>, sau đó truy cập
+      <code>http://localhost:3000</code>.
+    </div>
     <header class="header">
       <div>
         <h1>
           CNF LIVE DATA CHART ENGINE
           <span class="live"><span class="dot" aria-hidden="true"></span>LIVE</span>
         </h1>
-        <p class="subtitle">Dữ liệu tự động từ Google Sheets · Cập nhật mỗi 60 giây</p>
+        <p class="subtitle">Dữ liệu tự động từ Google Sheets · Cập nhật mỗi 10 giây</p>
         <p class="meta" id="lastUpdated">Đang khởi tạo...</p>
       </div>
       <div class="header-actions">
         <button type="button" id="refreshBtn">Làm mới</button>
       </div>
     </header>
+
+    <section class="panel sheet-source" aria-label="Nguồn Google Sheet">
+      <h2>Nguồn Google Sheet</h2>
+      <p class="hint">
+        Dán link Google Sheet công khai (tab <b>Dem MA</b>). Mặc định là sheet đã cấu hình sẵn.
+      </p>
+      <div class="toolbar sheet-url-row">
+        <input
+          type="text"
+          id="sheetUrlInput"
+          data-default-sheet-id="18R5rYR6vZSkVND_7XH7WLdkUvdDiN34bLuAdb9SzaC0"
+          placeholder="https://docs.google.com/spreadsheets/d/..."
+          aria-label="Link Google Sheet"
+          spellcheck="false"
+        />
+        <button type="button" id="applySheetBtn">Áp dụng</button>
+      </div>
+      <div id="sheetSourceStatus"></div>
+    </section>
 
     <section class="chart-card" aria-label="Biểu đồ breadth">
       <div id="chart"></div>

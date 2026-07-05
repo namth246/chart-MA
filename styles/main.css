@@ -126,6 +126,46 @@ h1 {
   margin: 12px 0 14px;
 }
 
+.sheet-url-row {
+  align-items: stretch;
+}
+
+.sheet-url-row input {
+  flex: 1 1 280px;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  border: 1px solid rgba(133, 233, 255, 0.28);
+  border-radius: 10px;
+  padding: 9px 13px;
+  font-family: "Times New Roman", Times, serif;
+  font-size: 15px;
+}
+
+.sheet-url-row input::placeholder {
+  color: #8a9bb5;
+}
+
+.protocol-banner {
+  margin-bottom: 16px;
+}
+
+.protocol-banner code {
+  color: #d6f6ff;
+}
+
+#sheetSourceStatus .error,
+#sheetSourceStatus .warn,
+#sheetSourceStatus .hint {
+  margin-top: 0;
+}
+
+.sheet-url-row input:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 12px rgba(133, 233, 255, 0.18);
+}
+
 button {
   background: #071229;
   color: #fff;

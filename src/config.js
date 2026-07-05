@@ -1,6 +1,6 @@
 export const SHEET_ID = "18R5rYR6vZSkVND_7XH7WLdkUvdDiN34bLuAdb9SzaC0";
 export const SHEET_NAME = "Dem MA";
-export const POLL_MS = 1_000;
+export const POLL_MS = 10_000;
 export const GVIZ_QUERY = "select A,C,M,W,AG";
 
 export const SERIES_COLORS = {
@@ -10,7 +10,31 @@ export const SERIES_COLORS = {
   "C>MA200": "#1E90FF",
 };
 
-export function buildGvizUrl() {
+export function getDefaultSheetUrl() {
+  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
+}
+
+/**
+ * @param {string} input
+ */
+export function parseSheetUrl(input) {
+  const trimmed = String(input).trim();
+  if (!trimmed) {
+    throw new Error("Link sheet không được để trống");
+  }
+
+  const fromPath = trimmed.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+  if (fromPath) return fromPath[1];
+
+  if (/^[a-zA-Z0-9-_]{20,}$/.test(trimmed)) return trimmed;
+
+  throw new Error("Link Google Sheet không hợp lệ");
+}
+
+/**
+ * @param {string} [sheetId]
+ */
+export function buildGvizUrl(sheetId = SHEET_ID) {
   const params = new URLSearchParams({
     tqx: "out:json",
     sheet: SHEET_NAME,
@@ -18,5 +42,5 @@ export function buildGvizUrl() {
     tq: GVIZ_QUERY,
     t: String(Date.now()),
   });
-  return `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?${params}`;
+  return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?${params}`;
 }
