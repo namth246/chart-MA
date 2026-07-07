@@ -15,7 +15,7 @@ let currentData = null;
 let lastHash = "";
 let pollTimer = null;
 let isLoading = false;
-let currentSheetId = SHEET_ID;
+let currentSheetId = localStorage.getItem("cnf_custom_sheet_id") || SHEET_ID;
 
 function setStatus(kind, message, target = "validation") {
   const boxId = target === "sheet" ? "sheetSourceStatus" : "validationBox";
@@ -116,6 +116,7 @@ function applySheetUrl() {
   const nextSheetId = parseSheetUrl(sheetUrlInput.value);
   if (nextSheetId !== currentSheetId) {
     currentSheetId = nextSheetId;
+    localStorage.setItem("cnf_custom_sheet_id", currentSheetId);
     lastHash = "";
     currentData = null;
   }
@@ -132,7 +133,7 @@ function updateSheetSourceVisibility() {
 
   const sheetUrlInput = document.getElementById("sheetUrlInput");
   if (isUnlocked && sheetUrlInput && !sheetUrlInput.value) {
-    sheetUrlInput.value = getDefaultSheetUrl();
+    sheetUrlInput.value = `https://docs.google.com/spreadsheets/d/${currentSheetId}/edit`;
   }
 }
 
