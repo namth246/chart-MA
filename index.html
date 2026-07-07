@@ -7,14 +7,6 @@
   <link rel="stylesheet" href="styles/main.css" />
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>
   <script type="module" src="src/app.js" defer></script>
-  <script>
-    (function () {
-      if (location.protocol === "file:") {
-        var banner = document.getElementById("fileProtocolBanner");
-        if (banner) banner.hidden = false;
-      }
-    })();
-  </script>
 </head>
 <body>
   <div class="page">
@@ -24,6 +16,14 @@
       Mở terminal trong thư mục dự án và chạy <code>npm start</code>, sau đó truy cập
       <code>http://localhost:3000</code>.
     </div>
+    <script>
+      (function () {
+        if (location.protocol === "file:") {
+          var banner = document.getElementById("fileProtocolBanner");
+          if (banner) banner.hidden = false;
+        }
+      })();
+    </script>
     <header class="header">
       <div class="header-main">
         <h1>
@@ -71,8 +71,8 @@
           <button type="button" id="applySheetBtn">Áp dụng</button>
           <button type="button" id="lockSheetBtn">Khóa lại</button>
         </div>
-        <div id="sheetSourceStatus"></div>
       </div>
+      <div id="sheetSourceStatus"></div>
 
       <dialog id="sheetPinDialog" class="pin-dialog" aria-labelledby="sheetPinTitle">
         <form method="dialog" id="sheetPinForm">
