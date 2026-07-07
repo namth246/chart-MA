@@ -1,7 +1,7 @@
 import { POLL_MS, SHEET_ID, ALLOW_DEVTOOLS, getDefaultSheetUrl, parseSheetUrl } from "./config.js";
 import { fetchSheetData } from "./sheetClient.js";
 import { serializeDataHash, toDisplayRows } from "./sheetParser.js";
-import { renderChart, updateAudit, updateSnapshotAndInsight } from "./chart.js";
+import { renderChart, updateAudit, updateSnapshotAndInsight, renderMarketRegime } from "./chart.js";
 import { isFileProtocol } from "./runtime.js";
 import {
   isSheetSourceUnlocked,
@@ -42,10 +42,22 @@ function renderTable(data) {
   const rows = toDisplayRows(data);
   tbody.innerHTML = rows
     .map(
-      (r) =>
-        `<tr>${r.map((cell) => `<td>${cell}</td>`).join("")}</tr>`
+      (r, idx) =>
+        `<tr data-index="${idx}">${r.map((cell) => `<td>${cell}</td>`).join("")}</tr>`
     )
     .join("");
+}
+
+function selectLatestRow() {
+  const tbody = document.querySelector("#dataTable tbody");
+  if (!tbody) return;
+  const rows = tbody.querySelectorAll("tr");
+  if (rows.length > 0) {
+    const lastRow = rows[rows.length - 1];
+    tbody.querySelectorAll("tr").forEach((row) => row.classList.remove("selected"));
+    lastRow.classList.add("selected");
+    lastRow.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
 }
 
 function renderAll(data) {
@@ -54,6 +66,7 @@ function renderAll(data) {
   renderTable(data);
   updateAudit(data);
   updateSnapshotAndInsight(data);
+  selectLatestRow();
   setLastUpdated();
   setStatus("ok", "", "sheet");
   setStatus("ok", "");
@@ -200,12 +213,30 @@ function bindSheetAccessUi() {
   updateSheetSourceVisibility();
 }
 
+function bindTableClick() {
+  const tbody = document.querySelector("#dataTable tbody");
+  if (!tbody) return;
+  tbody.addEventListener("click", (event) => {
+    const tr = event.target.closest("tr");
+    if (!tr) return;
+
+    tbody.querySelectorAll("tr").forEach((row) => row.classList.remove("selected"));
+    tr.classList.add("selected");
+
+    const idx = parseInt(tr.dataset.index, 10);
+    if (!isNaN(idx) && currentData && currentData[idx]) {
+      renderMarketRegime(currentData[idx]);
+    }
+  });
+}
+
 function bindUi() {
   const refreshBtn = document.getElementById("refreshBtn");
   const sheetUrlInput = document.getElementById("sheetUrlInput");
   const applySheetBtn = document.getElementById("applySheetBtn");
 
   bindSheetAccessUi();
+  bindTableClick();
 
   refreshBtn?.addEventListener("click", () => loadAndRender({ manual: true }));
   applySheetBtn?.addEventListener("click", () => {

@@ -404,3 +404,177 @@ th {
     height: 560px;
   }
 }
+
+/* Market Regime CSS */
+.regime-panel {
+  margin-top: 22px;
+}
+
+.regime-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 14px;
+}
+
+.regime-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.regime-card {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+}
+
+.regime-card h3 {
+  margin: 0 0 10px 0;
+  color: #b8c3d8;
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.badge-regime {
+  display: inline-block;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 4px 16px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* Colors for badges */
+.badge-regime.bullish-consensus {
+  color: var(--green);
+  background: rgba(57, 255, 136, 0.1);
+  border: 1px solid var(--green);
+  box-shadow: 0 0 10px rgba(57, 255, 136, 0.2);
+}
+
+.badge-regime.bullish-divergent {
+  color: var(--orange);
+  background: rgba(255, 138, 0, 0.1);
+  border: 1px solid var(--orange);
+  box-shadow: 0 0 10px rgba(255, 138, 0, 0.2);
+}
+
+.badge-regime.sideways-noise {
+  color: var(--cyan);
+  background: rgba(133, 233, 255, 0.1);
+  border: 1px solid var(--cyan);
+  box-shadow: 0 0 10px rgba(133, 233, 255, 0.2);
+}
+
+.badge-regime.bearish-balanced {
+  color: var(--gold);
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid var(--gold);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+.badge-regime.bearish-consensus {
+  color: var(--red);
+  background: rgba(255, 77, 77, 0.1);
+  border: 1px solid var(--red);
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.2);
+}
+
+.badge-regime.neutral-gray {
+  color: #8a99ad;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #8a99ad;
+}
+
+/* Detail Row Layout */
+.regime-details-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.regime-detail-col {
+  flex: 1 1 400px;
+  min-width: 0;
+}
+
+.regime-detail-col h3 {
+  font-size: 18px;
+  color: var(--cyan);
+  margin-top: 0;
+  margin-bottom: 12px;
+  border-left: 3px solid var(--cyan);
+  padding-left: 10px;
+}
+
+/* Tables style in detail */
+.checklist-table, .handoff-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.checklist-table th, .checklist-table td,
+.handoff-table th, .handoff-table td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 15px;
+}
+
+.checklist-table th, .handoff-table th {
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: bold;
+  color: #b8c3d8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Status colors in checklist */
+.status-pass {
+  color: var(--green);
+  font-weight: bold;
+}
+
+.status-fail {
+  color: var(--red);
+  font-weight: bold;
+}
+
+.status-nan {
+  color: #8a99ad;
+  font-style: italic;
+}
+
+/* Row selection in main table */
+#dataTable tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#dataTable tbody tr:hover {
+  background-color: rgba(133, 233, 255, 0.08) !important;
+}
+
+#dataTable tbody tr.selected {
+  background-color: rgba(133, 233, 255, 0.18) !important;
+  border-left: 4px solid var(--cyan);
+}
+
+/* Responsive adjustment */
+@media (max-width: 900px) {
+  .regime-summary-grid {
+    grid-template-columns: 1fr;
+  }
+  .badge-regime {
+    font-size: 20px;
+  }
+}
+

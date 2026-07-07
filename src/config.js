@@ -1,7 +1,7 @@
-export const SHEET_ID = "1HE4V8twdmGLUUCFWrQEnNmzWchCf61vzqSuq891XTDc";
-export const SHEET_NAME = "Dem MA";
+export const SHEET_ID = "1ssvGodus9T8ffprGN3O82hdoVC1GNb6k";
+export const SHEET_NAME = "Market_Regime_Input";
 export const POLL_MS = 10_000;
-export const GVIZ_QUERY = "select A,C,M,W,AG";
+export const GVIZ_QUERY = "select A,B,C,D,E,F,G,H,I,J,K,L,M,N";
 /** 4-digit PIN to view or change the sheet source URL. */
 export const SHEET_ACCESS_PIN = "2406";
 /** When false, block common DevTools shortcuts and context menu. */

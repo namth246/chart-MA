@@ -107,10 +107,87 @@
       <div id="chart"></div>
     </section>
 
+    <section class="panel regime-panel" id="regimePanel" aria-label="Đánh giá Market Regime">
+      <h2>Đánh giá Market Regime <span id="regimeDate" style="color: var(--cyan); font-size: 0.8em; margin-left: 10px;">(Đang tải...)</span></h2>
+      <div class="regime-container">
+        
+        <!-- Summary Cards -->
+        <div class="regime-summary-grid">
+          <div class="regime-card">
+            <h3>Trạng thái thị trường</h3>
+            <span class="badge-regime" id="regimeStatus">-</span>
+          </div>
+          <div class="regime-card">
+            <h3>Chế độ đầu tư</h3>
+            <span class="badge-regime" id="regimeMode">-</span>
+          </div>
+          <div class="regime-card">
+            <h3>Trần rủi ro</h3>
+            <span class="badge-regime" id="regimeRisk">-</span>
+          </div>
+        </div>
+
+        <!-- Detail Table & Handoff -->
+        <div class="regime-details-row">
+          
+          <!-- Quantitative Checklist -->
+          <div class="regime-detail-col">
+            <h3>Chi tiết tiêu chí định lượng (Checklist)</h3>
+            <table class="checklist-table" id="checklistTable">
+              <thead>
+                <tr>
+                  <th>Tiêu chí</th>
+                  <th>Công thức / Ngưỡng</th>
+                  <th>Thực tế</th>
+                  <th>Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Filled dynamically by chart.js -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Handoff & Rules -->
+          <div class="regime-detail-col">
+            <h3>Bàn giao & Hướng dẫn hành động</h3>
+            <table class="handoff-table" id="handoffTable">
+              <thead>
+                <tr>
+                  <th>Bước</th>
+                  <th>Hành động ĐƯỢC PHÉP</th>
+                  <th>Hành động KHÔNG ĐƯỢC PHÉP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><b>Bước 2 (Chọn lọc)</b></td>
+                  <td id="b2Allowed">-</td>
+                  <td id="b2Denied">-</td>
+                </tr>
+                <tr>
+                  <td><b>Bước 3 (Giải ngân)</b></td>
+                  <td id="b3Allowed">-</td>
+                  <td id="b3Denied">-</td>
+                </tr>
+                <tr>
+                  <td><b>Bước 4 (Phòng thủ)</b></td>
+                  <td id="b4Allowed">-</td>
+                  <td id="b4Denied">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
     <section class="panel" aria-label="Bảng dữ liệu đồng bộ">
-      <h2>Bảng dữ liệu (đồng bộ từ Sheet Dem MA)</h2>
+      <h2>Bảng dữ liệu (đồng bộ từ Google Sheet)</h2>
       <p class="hint">
-        Nguồn: cột <b>A</b> (Ngày), <b>C</b> (C&gt;MA10), <b>M</b> (C&gt;MA20), <b>W</b> (C&gt;MA50), <b>AG</b> (C&gt;MA200).
+        Nguồn: cột <b>A</b> (Ngày), <b>E</b> (C&gt;MA10), <b>F</b> (C&gt;MA20), <b>G</b> (C&gt;MA50), <b>H</b> (C&gt;MA200).
         Bảng chỉ đọc — chỉnh sửa trực tiếp trên Google Sheet.
       </p>
       <div class="table-wrap">
