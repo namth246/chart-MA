@@ -39,15 +39,24 @@ Dashboard web theo dõi **breadth thị trường CNF** (tỷ lệ cổ phiếu 
 
 ### Yêu cầu Sheet
 
-Tab **`Dem MA`** với các cột:
+Tab **`Market_Regime_Input`** với 14 cột dữ liệu:
 
-| Cột | Nội dung |
-|-----|----------|
-| A | Ngày (`dd-mm-yyyy`) |
-| C | C>MA10 (%) |
-| M | C>MA20 (%) |
-| W | C>MA50 (%) |
-| AG | C>MA200 (%) |
+| Cột | Biến | Nội dung |
+|-----|------|----------|
+| A | Date | Ngày giao dịch (hỗ trợ định dạng chuẩn Excel hoặc gviz) |
+| B | MA10 VNIndex | Giá trị MA10 của chỉ số VNIndex |
+| C | MA20 VNIndex | Giá trị MA20 của chỉ số VNIndex |
+| D | MA50 VNIndex | Giá trị MA50 của chỉ số VNIndex |
+| E | %CP > MA10 | Tỷ lệ % cổ phiếu trên đường MA10 của chính nó |
+| F | %CP > MA20 | Tỷ lệ % cổ phiếu trên đường MA20 của chính nó |
+| G | %CP > MA50 | Tỷ lệ % cổ phiếu trên đường MA50 của chính nó |
+| H | %CP > MA200 | Tỷ lệ % cổ phiếu trên đường MA200 của chính nó |
+| I | S50 | Tỷ lệ % cổ phiếu có MA50 dốc lên (MA50(t) > MA50(t-10)) |
+| J | MACD_Pos | Tỷ lệ % cổ phiếu có MACD > 0 |
+| K | ShortBreadth_Drawdown10 | Mức co hẹp độ rộng ngắn hạn so với đỉnh 10 phiên |
+| L | B50_Drawdown20 | Mức co hẹp của B50 so với đỉnh 20 phiên |
+| M | ShortBreadth_Rebound10 | Mức hồi phục độ rộng ngắn hạn so với đáy 10 phiên |
+| N | B20_Change5 | Thay đổi tỷ lệ B20 so với 5 phiên giao dịch trước |
 
 Sheet phải **công khai** (Anyone with the link can view).
 
@@ -57,19 +66,20 @@ Sheet phải **công khai** (Anyone with the link can view).
 
 ### Tính năng chính
 
-- **Đồng bộ Google Sheets** — Tự động poll mỗi 10 giây (cấu hình được)
-- **Biểu đồ line chart** — 4 series MA với zoom, pan, range slider và nút 1M / 3M / 6M / YTD / MAX
-- **Bảng dữ liệu** — Hiển thị dữ liệu đồng bộ, chỉ đọc
-- **Data Audit** — Kiểm tra điểm đầu, giữa, cuối chuỗi dữ liệu
-- **Snapshot & Insight CNF** — Số liệu cuối kỳ và nhận định breadth tự động
-- **Làm mới thủ công** — Nút refresh bất cứ lúc nào
+- **Đồng bộ Google Sheets** — Tự động đồng bộ 14 cột chỉ số và poll mỗi 10 giây (cấu hình được).
+- **Đánh giá Market Regime tự động** — Tự động phân loại 5 trạng thái thị trường, 5 chế độ đầu tư và trần rủi ro khuyến nghị theo đúng tiêu chuẩn định lượng của CNF.
+- **Biểu đồ line chart** — 4 series MA độ rộng (C>MA10/20/50/200) với zoom, pan, range slider và nút 1M / 3M / 6M / YTD / MAX.
+- **Bảng dữ liệu tương tác** — Hiển thị dữ liệu đồng bộ, cho phép click vào bất kỳ hàng nào để xem đánh giá thị trường lịch sử của ngày đó.
+- **Data Audit** — Kiểm tra điểm đầu, giữa, cuối chuỗi dữ liệu.
+- **Snapshot & Insight CNF** — Số liệu cuối kỳ và nhận định tự động cập nhật động theo ngày được chọn.
+- **Làm mới thủ công** — Nút refresh dữ liệu lập tức bất cứ lúc nào.
 
 ### Tính năng nâng cao
 
-- **Đổi nguồn Sheet** — Nhập link Google Sheet khác (cần mở khóa PIN)
-- **Bảo vệ PIN 4 chữ số** — Link nguồn bị ẩn cho đến khi nhập đúng mã
-- **Logo CNF** — Badge góc phải header + watermark giữa biểu đồ
-- **Chặn DevTools** — Tắt phím tắt DevTools và menu chuột phải (cấu hình được)
+- **Đổi nguồn Sheet** — Nhập link Google Sheet khác (cần mở khóa PIN).
+- **Bảo vệ PIN 4 chữ số** — Link nguồn bị ẩn cho đến khi nhập đúng mã.
+- **Logo CNF** — Badge góc phải header + watermark giữa biểu đồ.
+- **Chặn DevTools** — Tắt phím tắt DevTools và menu chuột phải (cấu hình được).
 
 ---
 
@@ -96,6 +106,12 @@ npm start
 ```
 
 Mở trình duyệt tại: **http://localhost:3000**
+
+> **Giải pháp thay thế (Không cần Node.js):** Nếu máy bạn chưa có sẵn Node.js, bạn có thể khởi chạy server tĩnh cục bộ bằng Python:
+> ```bash
+> python -m http.server 3000
+> ```
+> Sau đó mở trình duyệt và truy cập `http://localhost:3000`.
 
 > **Quan trọng:** Không mở trực tiếp `index.html` bằng double-click. Trình duyệt chặn ES Modules và fetch Google Sheets từ giao thức `file://`.
 
@@ -264,7 +280,9 @@ Dự án **Private** — không cấp phép sử dụng công khai. Mọi quyề
 
 ## Liên hệ
 
-**ntd237**
+**namth246**
 
-- Email: [ntd237.work@gmail.com](mailto:ntd237.work@gmail.com)
-- GitHub: [https://github.com/ntd237](https://github.com/ntd237)
+- Email: [tranhoainam240604@gmail.com](mailto:tranhoainam240604@gmail.com)
+- GitHub: [https://github.com/namth246](https://github.com/namth246)
+#   d a n h _ g i a _ t h i _ t r u o n g  
+ 
